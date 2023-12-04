@@ -45,10 +45,6 @@ fn process_input(input: &str) -> InputType {
         .collect::<Vec<_>>()
 }
 
-// fn process_input_part_two(input: &str) -> LinesType2 {
-//     todo!()
-// }
-
 fn part_one(lines: &InputType) -> ResultType {
     let mut sum = 0;
     for (winning_cards, owned_cards) in lines {
