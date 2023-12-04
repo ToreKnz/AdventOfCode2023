@@ -1,1 +1,0 @@
-/home/tore/Documents/Codeprojekte/Rust/AdventOfCode2023/advent4/target/debug/advent4: /home/tore/Documents/Codeprojekte/Rust/AdventOfCode2023/advent4/src/input.txt /home/tore/Documents/Codeprojekte/Rust/AdventOfCode2023/advent4/src/main.rs /home/tore/Documents/Codeprojekte/Rust/AdventOfCode2023/advent4/src/test_input.txt
