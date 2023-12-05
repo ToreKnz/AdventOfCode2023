@@ -15,7 +15,6 @@ fn main() {
     let res = part_one(&input);
     println!("Solution part one: {:?}", res);
 
-    // let input2 = process_input_part_two(input_str.clone());
     let res2 = part_two(&input);
     println!("Solution part two: {:?}",res2);
 }
@@ -29,7 +28,6 @@ fn process_input(input: &str) -> InputType {
         .map(|num| num.parse::<u64>().unwrap())
         .collect::<Vec<_>>();
     lines.next();
-    // let mut maps = vec![];
     let lines: Vec<String> = lines.map(|line| line.to_string()).collect::<Vec<_>>();
     let splits = lines
         .split(|line| line.is_empty())
@@ -55,10 +53,6 @@ fn process_input(input: &str) -> InputType {
             .collect(),
     )
 }
-
-// fn process_input_part_two(input: &str) -> LinesType2 {
-//     todo!()
-// }
 
 fn part_one(lines: &InputType) -> ResultType {
     let (seeds, blocks) = lines;
