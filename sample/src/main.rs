@@ -27,7 +27,7 @@ fn process_input(input: &str) -> InputType {
     todo!()
 }
 
-// fn process_input_part_two(input: &str) -> LinesType2 {
+// fn process_input_part_two(input: &str) -> InputType2 {
 //     todo!()
 // }
 
