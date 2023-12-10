@@ -45,7 +45,7 @@ fn part_one(lines: &InputType) -> ResultType {
             }
         }
         steps += 1;
-        if current == "ZZZ".to_string() {
+        if current == *"ZZZ".to_string() {
             return steps;
         }
     }

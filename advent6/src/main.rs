@@ -23,9 +23,9 @@ fn main() {
 fn process_input(input: &str) -> InputType {
     input
         .lines()
-        .map(|line| line.split(":").last().unwrap())
+        .map(|line| line.split(':').last().unwrap())
         .map(|line| {
-            line.split(" ")
+            line.split(' ')
                 .filter(|line| !line.is_empty())
                 .map(|num| num.parse::<u64>().unwrap())
                 .collect::<Vec<_>>()
@@ -36,8 +36,8 @@ fn process_input(input: &str) -> InputType {
 fn process_input_part_two(input: &str) -> InputType2 {
     input
         .lines()
-        .map(|line| line.split(":").last().unwrap())
-        .map(|line| line.replace(" ", ""))
+        .map(|line| line.split(':').last().unwrap())
+        .map(|line| line.replace(' ', ""))
         .map(|line| line.parse::<u64>().unwrap())
         .collect::<Vec<_>>()
 }

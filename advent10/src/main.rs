@@ -42,7 +42,7 @@ impl Direction {
         [Top, Left, Right, Bottom]
     }
 
-    fn to_offset(&self) -> Position {
+    fn to_offset(self) -> Position {
         match self {
             Top => Position { x: -1, y: 0 },
             Left => Position { x: 0, y: -1 },
@@ -51,7 +51,7 @@ impl Direction {
         }
     }
 
-    fn apply_offset(&self, pos: Position) -> Position {
+    fn apply_offset(self, pos: Position) -> Position {
         let (x, y) = (pos.x, pos.y);
         let offset = self.to_offset();
         let (dx, dy) = (offset.x, offset.y);
@@ -61,7 +61,7 @@ impl Direction {
         }
     }
 
-    fn invert(&self) -> Self {
+    fn invert(self) -> Self {
         match self {
             Top => Bottom,
             Bottom => Top,
@@ -70,7 +70,7 @@ impl Direction {
         }
     }
 
-    fn relative_left(&self) -> Self {
+    fn relative_left(self) -> Self {
         match self {
             Top => Left,
             Left => Bottom,
@@ -79,7 +79,7 @@ impl Direction {
         }
     }
 
-    fn relative_right(&self) -> Self {
+    fn relative_right(self) -> Self {
         self.relative_left().invert()
     }
 
@@ -306,7 +306,7 @@ fn direct_pipe_neighbour(
     pos: Position,
     pipes: &HashSet<Position>,
     wrong_neighbour: Position,
-    map: &Vec<Vec<char>>,
+    map: &[Vec<char>],
 ) -> Position {
     for dir in Direction::values() {
         let new_pos = dir.apply_offset(pos);

@@ -40,9 +40,9 @@ fn part_one(lines: &InputType) -> ResultType {
     sum
 }
 
-fn extrapolate_value(line: &Vec<i64>) -> i64 {
+fn extrapolate_value(line: &[i64]) -> i64 {
     let mut lines: Vec<Vec<i64>> = vec![line.to_vec()];
-    while !is_zero_vec(&lines.last().unwrap()) {
+    while !is_zero_vec(lines.last().unwrap()) {
         lines.push(vec![]);
         for i in 0..lines[lines.len()-2].len() - 1 {
             let val1 = lines[lines.len()-2][i];
@@ -54,15 +54,15 @@ fn extrapolate_value(line: &Vec<i64>) -> i64 {
     lines.reverse();
     let mut extrapolated = 0;
     for line in lines.iter().skip(1) {
-        extrapolated = *line.last().unwrap() + extrapolated;
+        extrapolated += *line.last().unwrap();
     }
     extrapolated
 }
 
 
-fn extrapolate_value_rev(line: &Vec<i64>) -> i64 {
+fn extrapolate_value_rev(line: &[i64]) -> i64 {
     let mut lines: Vec<Vec<i64>> = vec![line.to_vec()];
-    while !is_zero_vec(&lines.last().unwrap()) {
+    while !is_zero_vec(lines.last().unwrap()) {
         lines.push(vec![]);
         for i in 0..lines[lines.len()-2].len() - 1 {
             let val1 = lines[lines.len()-2][i];
@@ -79,7 +79,7 @@ fn extrapolate_value_rev(line: &Vec<i64>) -> i64 {
     extrapolated
 }
 
-fn is_zero_vec(vec: &Vec<i64>) -> bool {
+fn is_zero_vec(vec: &[i64]) -> bool {
     vec.iter().all(|val| *val == 0)
 }
 

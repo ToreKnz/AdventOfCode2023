@@ -23,16 +23,16 @@ fn main() {
 
 fn process_input(input: &str) -> InputType {
     input.lines().filter(|line| !line.is_empty()).map(|line| {
-        let splits = line.split(":");
+        let splits = line.split(':');
         let game_vec: Vec<&str> = splits.collect();
         let game_id: u32 = game_vec[0][5..].parse().unwrap();
-        let games: Vec<&str> = game_vec[1].split(";").map(|part| part.trim()).collect();
+        let games: Vec<&str> = game_vec[1].split(';').map(|part| part.trim()).collect();
         let games: Vec<(u32, u32, u32)> = games.iter().map(|part| {
             let mut blue = 0;
             let mut red = 0;
             let mut green = 0;
-            let counts: Vec<&str> = part.split(",").map(|count| count.trim()).collect();
-            let parts: Vec<_> = counts.iter().map(|part| part.split(" ")).collect();
+            let counts: Vec<&str> = part.split(',').map(|count| count.trim()).collect();
+            let parts: Vec<_> = counts.iter().map(|part| part.split(' ')).collect();
             for split in parts {
                 let split: Vec<_> = split.collect();
                 let count: u32 = split[0].parse().unwrap();
@@ -44,7 +44,7 @@ fn process_input(input: &str) -> InputType {
                     _ => {}, 
                 };
             }
-            (blue as u32, red as u32, green as u32)
+            (blue, red, green)
         }).collect();
         (game_id, games)
     }).collect()
@@ -59,7 +59,7 @@ fn part_one(lines: &InputType) -> ResultType {
         }
         true
         }
-    ).map(|part| part.0).sum::<u32>() as u32
+    ).map(|part| part.0).sum::<u32>()
 }
 
 fn part_two(lines: &InputType2) -> ResultType2 {
@@ -74,5 +74,5 @@ fn part_two(lines: &InputType2) -> ResultType2 {
         }
         b_max * r_max * g_max
         }
-    ).sum::<u32>() as u32
+    ).sum::<u32>()
 }

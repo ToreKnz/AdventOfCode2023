@@ -24,21 +24,17 @@ fn process_input(input: &str) -> InputType {
         .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {
-            let (mut winning_cards, mut owned_cards) = line.split_once("|").unwrap();
-            winning_cards = winning_cards.split_once(":").unwrap().1;
+            let (mut winning_cards, mut owned_cards) = line.split_once('|').unwrap();
+            winning_cards = winning_cards.split_once(':').unwrap().1;
             winning_cards = winning_cards.trim();
             let winning_cards = winning_cards
-                .split(" ")
-                .map(|num| num.parse::<u32>())
-                .filter(|part| part.is_ok())
-                .map(|num| num.unwrap())
+                .split(' ')
+                .filter_map(|num| num.parse::<u32>().ok())
                 .collect::<Vec<_>>();
             owned_cards = owned_cards.trim();
             let owned_cards = owned_cards
-                .split(" ")
-                .map(|num| num.parse::<u32>())
-                .filter(|part| part.is_ok())
-                .map(|num| num.unwrap())
+                .split(' ')
+                .filter_map(|num| num.parse::<u32>().ok())
                 .collect::<Vec<_>>();
             (winning_cards, owned_cards)
         })
@@ -55,7 +51,7 @@ fn part_one(lines: &InputType) -> ResultType {
             }
         }
         if matches != 0 {
-            sum += 2_u32.pow(matches - 1 as u32);
+            sum += 2_u32.pow(matches - 1_u32);
         }
     }
     sum as u64

@@ -20,11 +20,11 @@ fn main() {
 }
 
 fn process_input(input: &str) -> InputType {
-    let mut lines = input.split("\n");
+    let mut lines = input.split('\n');
     let seed_line = lines.next().unwrap();
     let seed_line = seed_line.replace("seeds: ", "");
     let seeds = seed_line
-        .split(" ")
+        .split(' ')
         .map(|num| num.parse::<u64>().unwrap())
         .collect::<Vec<_>>();
     lines.next();
@@ -43,7 +43,7 @@ fn process_input(input: &str) -> InputType {
                     .iter()
                     .map(|line| {
                         let nums = line
-                            .split(" ")
+                            .split(' ')
                             .map(|num| num.parse::<u64>().unwrap())
                             .collect::<Vec<_>>();
                         (nums[0], nums[1], nums[2])

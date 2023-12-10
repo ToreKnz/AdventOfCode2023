@@ -25,7 +25,7 @@ fn process_input(input: &str) -> InputType {
         .filter(|line| !line.is_empty())
         .map(|line| {
             line.chars()
-                .filter(|character| character.is_digit(10))
+                .filter(|character| character.is_ascii_digit())
                 .map(|character| character.to_digit(10).unwrap())
                 .collect()
         })
@@ -39,23 +39,23 @@ fn process_input_part_two(input: &str) -> InputType2 {
         .map(|line| {
             let mut num_vec: Vec<u32> = Vec::new();
             for i in 0..line.len() {
-                if line[i..].starts_with("1") || line[i..].starts_with("one") {
+                if line[i..].starts_with('1') || line[i..].starts_with("one") {
                     num_vec.push(1);
-                } else if line[i..].starts_with("2") || line[i..].starts_with("two") {
+                } else if line[i..].starts_with('2') || line[i..].starts_with("two") {
                     num_vec.push(2);
-                } else if line[i..].starts_with("3") || line[i..].starts_with("three") {
+                } else if line[i..].starts_with('3') || line[i..].starts_with("three") {
                     num_vec.push(3);
-                } else if line[i..].starts_with("4") || line[i..].starts_with("four") {
+                } else if line[i..].starts_with('4') || line[i..].starts_with("four") {
                     num_vec.push(4);
-                } else if line[i..].starts_with("5") || line[i..].starts_with("five") {
+                } else if line[i..].starts_with('5') || line[i..].starts_with("five") {
                     num_vec.push(5);
-                } else if line[i..].starts_with("6") || line[i..].starts_with("six") {
+                } else if line[i..].starts_with('6') || line[i..].starts_with("six") {
                     num_vec.push(6);
-                } else if line[i..].starts_with("7") || line[i..].starts_with("seven") {
+                } else if line[i..].starts_with('7') || line[i..].starts_with("seven") {
                     num_vec.push(7);
-                } else if line[i..].starts_with("8") || line[i..].starts_with("eight") {
+                } else if line[i..].starts_with('8') || line[i..].starts_with("eight") {
                     num_vec.push(8);
-                } else if line[i..].starts_with("9") || line[i..].starts_with("nine") {
+                } else if line[i..].starts_with('9') || line[i..].starts_with("nine") {
                     num_vec.push(9);
                 }
             }
