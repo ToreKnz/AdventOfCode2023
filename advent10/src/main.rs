@@ -119,10 +119,6 @@ fn pipe_is_connected(pipe: char, dir: Direction) -> bool {
     }
 }
 
-// fn process_input_part_two(input: &str) -> InputType2 {
-//     todo!()
-// }
-
 fn part_one(lines: &InputType) -> ResultType {
     let mut start_position = Position { x: 0, y: 0 };
     'search: for (x, line) in lines.iter().enumerate() {
