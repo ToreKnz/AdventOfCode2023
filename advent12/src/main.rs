@@ -1,3 +1,5 @@
+use rustc_hash::FxHashMap;
+
 const TEST_INPUT: bool = false;
 type InputType<'a> = Vec<(Vec<Condition>, Vec<u64>)>;
 type InputType2<'a> = InputType<'a>;
@@ -16,6 +18,7 @@ fn main() {
     println!("Solution part one: {:?}", res);
 
     let input2 = process_input_part_two(input_str.clone());
+
     let res2 = part_two(&input2);
     println!("Solution part two: {:?}", res2);
 }
@@ -26,8 +29,6 @@ enum Condition {
     Damaged,
     Unknown,
 }
-
-use std::collections::HashMap;
 
 use Condition::*;
 impl Condition {
@@ -73,97 +74,123 @@ fn process_input_part_two(input: &str) -> InputType2 {
         .collect::<Vec<_>>()
 }
 
+#[derive(Debug, Clone, Copy)]
+struct LineIter<'a> {
+    line: &'a Vec<Condition>,
+    pos: usize,
+}
+
+impl<'a> LineIter<'a> {
+    fn get(&self) -> Option<&Condition> {
+        self.line.get(self.pos)
+    }
+
+    fn next(&self) -> Self {
+        LineIter {
+            line: self.line,
+            pos: self.pos + 1,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct NumIter<'a> {
+    nums: &'a Vec<u64>,
+    pos: usize,
+}
+
+impl<'a> NumIter<'a> {
+    fn matches_count(&self, chain: u64) -> bool {
+        chain == self.get()
+    }
+
+    fn get(&self) -> u64 {
+        *self.nums.get(self.pos).unwrap_or(&0)
+    }
+
+    fn updated_pos(&self, chain: u64) -> Self {
+        NumIter {
+            nums: self.nums,
+            pos: if chain == 0 { self.pos } else { self.pos + 1 },
+        }
+    }
+}
+
 fn count_consistent(
-    line: &Vec<Condition>,
-    num_vec: Vec<u64>,
-    pos: u64,
+    line: LineIter,
+    nums: NumIter,
     curr_chain_len: u64,
-    cache: &mut HashMap<(Vec<u64>, u64, u64), u64>,
+    cache: &mut FxHashMap<(usize, usize, u64), u64>,
 ) -> u64 {
-    let mut curr_chain_len_new = curr_chain_len;
-    let mut num_vec_new = num_vec.clone();
-    if let Some(&val) = cache.get(&(num_vec.clone(), pos, curr_chain_len)) {
+    if let Some(&val) = cache.get(&(line.pos, nums.pos, curr_chain_len)) {
         return val;
     }
-
-    let mut total_count = 0;
-    for i in pos as usize..line.len() {
-        match line[i] {
-            Operational => {
-                if curr_chain_len_new != 0 {
-                    if let Some(&j) = num_vec_new.first() {
-                        if j == curr_chain_len_new {
-                            num_vec_new = num_vec_new[1..].to_vec();
-                        } else {
-                            cache.insert((num_vec, pos, curr_chain_len), 0);
-                            return 0;
-                        }
-                    } else {
-                        cache.insert((num_vec, pos, curr_chain_len), 0);
-                        return 0;
-                    }
-                }
-                curr_chain_len_new = 0
-            }
-            Damaged => {
-                curr_chain_len_new += 1;
-            }
-            Unknown => {
-                let mut op_num_vec = num_vec_new.clone();
-                if let Some(&j) = num_vec_new.first() {
-                    if curr_chain_len_new == 0 {
-                        total_count += count_consistent(line, op_num_vec, i as u64 + 1, 0, cache);
-                    } else if j == curr_chain_len_new {
-                        op_num_vec = op_num_vec[1..].to_vec();
-                        total_count += count_consistent(line, op_num_vec, i as u64 + 1, 0, cache);
-                    }
-
-                    if curr_chain_len_new < j {
-                        total_count += count_consistent(
-                            line,
-                            num_vec_new.clone(),
-                            i as u64 + 1,
-                            curr_chain_len_new + 1,
-                            cache,
-                        );
-                    }
-                    cache.insert((num_vec, pos, curr_chain_len), total_count);
-                    return total_count;
-                } else if curr_chain_len_new == 0 {
-                    total_count += count_consistent(line, op_num_vec, i as u64 + 1, 0, cache);
-                } else {
-                    cache.insert((num_vec, pos, curr_chain_len), 0);
-                    return 0;
-                }
-            }
-        }
+    if nums.nums[nums.pos..].iter().sum::<u64>() > line.line[line.pos..].iter().count() as u64 + curr_chain_len
+    {
+        cache.insert((line.pos, nums.pos, curr_chain_len), 0);
+        return 0;
     }
-    if curr_chain_len_new == 0 {
-        if num_vec_new.is_empty() {
-            cache.insert((num_vec, pos, curr_chain_len), 1);
-            1
-        } else {
-            cache.insert((num_vec, pos, curr_chain_len), 0);
-            0
+    match line.get() {
+        Some(Operational) => {
+            if nums.matches_count(curr_chain_len) || curr_chain_len == 0 {
+                let res = count_consistent(line.next(), nums.updated_pos(curr_chain_len), 0, cache);
+                cache.insert((line.pos, nums.pos, curr_chain_len), res);
+                res
+            } else {
+                cache.insert((line.pos, nums.pos, curr_chain_len), 0);
+                0
+            }
         }
-    } else if let Some(&j) = num_vec_new.first() {
-        if j == curr_chain_len_new && num_vec_new.len() == 1 {
-            cache.insert((num_vec, pos, curr_chain_len), 1);
-            1
-        } else {
-            cache.insert((num_vec, pos, curr_chain_len), 0);
-            0
+        Some(Damaged) => {
+            let res = count_consistent(line.next(), nums, curr_chain_len + 1, cache);
+            cache.insert((line.pos, nums.pos, curr_chain_len), res);
+            res
         }
-    } else {
-        cache.insert((num_vec, pos, curr_chain_len), 0);
-        0
+        Some(Unknown) => {
+            if nums.matches_count(curr_chain_len) {
+                let res = count_consistent(line.next(), nums.updated_pos(curr_chain_len), 0, cache);
+                cache.insert((line.pos, nums.pos, curr_chain_len), res);
+                res
+            } else if nums.get() < curr_chain_len {
+                cache.insert((line.pos, nums.pos, curr_chain_len), 0);
+                0
+            } else {
+                if curr_chain_len == 0 {
+                    let res = count_consistent(line.next(), nums, 0, cache)
+                        + count_consistent(line.next(), nums, curr_chain_len + 1, cache);
+                    cache.insert((line.pos, nums.pos, curr_chain_len), res);
+                    res
+                } else {
+                    let res = count_consistent(line.next(), nums, curr_chain_len + 1, cache);
+                    cache.insert((line.pos, nums.pos, curr_chain_len), res);
+                    res
+                }
+            }
+        }
+        None => {
+            if !nums.matches_count(curr_chain_len) || nums.nums.len() as isize - nums.pos as isize > 1 {
+                cache.insert((line.pos, nums.pos, curr_chain_len), 0);
+                0
+            } else {
+                cache.insert((line.pos, nums.pos, curr_chain_len), 1);
+                1
+            }
+        }
     }
 }
 
 fn part_one(lines: &InputType) -> ResultType {
     let mut sum = 0;
     for (conditions, nums) in lines {
-        sum += count_consistent(conditions, nums.clone(), 0, 0, &mut HashMap::new());
+        sum += count_consistent(
+            LineIter {
+                line: conditions,
+                pos: 0,
+            },
+            NumIter { nums, pos: 0 },
+            0,
+            &mut FxHashMap::default(),
+        );
     }
     sum
 }
@@ -171,7 +198,15 @@ fn part_one(lines: &InputType) -> ResultType {
 fn part_two(lines: &InputType2) -> ResultType2 {
     let mut sum = 0;
     for (conditions, nums) in lines {
-        sum += count_consistent(conditions, nums.clone(), 0, 0, &mut HashMap::new());
+        sum += count_consistent(
+            LineIter {
+                line: conditions,
+                pos: 0,
+            },
+            NumIter { nums, pos: 0 },
+            0,
+            &mut FxHashMap::default(),
+        );
     }
     sum
 }
