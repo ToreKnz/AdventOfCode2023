@@ -5,7 +5,6 @@ type InputType<'a> = (&'a str, HashMap<String, (String,String)>);
 type InputType2<'a> = InputType<'a>;
 type ResultType = u64;
 type ResultType2 = ResultType;
-
 fn main() {
     let input_str = if TEST_INPUT {
         include_str!("test_input.txt")
