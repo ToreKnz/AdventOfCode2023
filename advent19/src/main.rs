@@ -312,8 +312,6 @@ impl PartRange {
 }
 
 fn process_input(input: &str) -> InputType {
-    // input.split('\n').collect()
-
     let lines = input.split_once("\n\n").unwrap();
     let mut workflows = HashMap::new();
     for line in lines.0.lines().filter(|line| !line.is_empty()) {
