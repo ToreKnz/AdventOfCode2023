@@ -241,12 +241,8 @@ fn part_two(lines: &InputType2) -> ResultType2 {
                 if *high {
                     let step = i - steps.get(&label.clone()).unwrap();
                     if step != 0 {
-                        // println!("from: {}, steps: {}", label.clone(), step);
                         steps.insert(label.clone().clone(), i).unwrap();
                         if !step_sizes.get(label).unwrap().contains(&step) {
-                            if step_sizes.get(label).unwrap().len() > 0 && !step_sizes.get(label).unwrap().last().unwrap() == step {
-                                // println!("not last lul");
-                            }
                             step_sizes.get_mut(label).unwrap().push(step);
                         }
                     }
