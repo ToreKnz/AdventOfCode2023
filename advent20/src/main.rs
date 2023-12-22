@@ -252,19 +252,7 @@ fn part_two(lines: &InputType2) -> ResultType2 {
     }
     let mut res = 1;
     for step_size in step_sizes {
-        res = lcm(*step_size.1.first().unwrap() as u64, res); 
+        res *= *step_size.1.first().unwrap() as u64; 
     }
     res
-}
-
-
-fn gcd(mut a: u64, mut b: u64) -> u64 {
-    while b != 0 {
-        (a, b) = (b, a % b)
-    }
-    a
-}
-
-fn lcm(a: u64, b: u64) -> u64 {
-    a * b / gcd(a, b)
 }
